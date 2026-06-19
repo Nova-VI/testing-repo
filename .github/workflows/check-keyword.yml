@@ -1,0 +1,25 @@
+name: Check for Forbidden Keywords
+
+on:
+  push:
+    branches: [ "main", "master" ] # Adjust this to match your branch names
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  scan-code:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Scan for 'keyword'
+      run: |
+        # Search for the word case-insensitively, ignoring the .github folder itself
+        if grep -riI "keyword" --exclude-dir=".github" .; then
+          echo "Error: The forbidden word 'keyword' was found in the repository."
+          exit 1
+        else
+          echo "Clear: No forbidden keywords found."
+        fi
